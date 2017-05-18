@@ -381,9 +381,9 @@ texinfo_documents = [
 # regardless of the global pdf_compressed setting.
 
 pdf_documents = [(master_doc,
-                  'BioVida',
-                  'BioVida Documentation',
-                  'Tariq A. Hassan')
+                  u'BioVida',
+                  u'BioVida Documentation',
+                  u'Tariq A. Hassan')
         ,]
 
 # A comma-separated list of custom stylesheets. Example:

@@ -133,13 +133,13 @@ def _patient_sex_extract(image_summary_info):
     counts_dict_m = {t: image_summary_info.count(t) for t in ['male', 'man', 'boy', ' he ', ' m ']}
 
     # Block Conflicting Information
-    if sum(counts_dict_f.values()) > 0 and sum([v for k, v in list(counts_dict_m.items()) if k not in ['male', 'man']]) > 0:
+    if sum(counts_dict_f.values()) > 0 and sum([v for k, v in counts_dict_m.items() if k not in ['male', 'man']]) > 0:
         return None
 
     # Check for sex information
-    if any(x > 0 for x in list(counts_dict_f.values())):
+    if any(x > 0 for x in counts_dict_f.values()):
         return 'female'
-    elif any(x > 0 for x in list(counts_dict_m.values())):
+    elif any(x > 0 for x in counts_dict_m.values()):
         return 'male'
     else:
         return None
@@ -331,7 +331,7 @@ def _ethnicity_guess_engine(image_summary_info):
         'aboriginal': ['aboriginal']
     }
 
-    for k, v in list(long_form_ethnicities.items()):
+    for k, v in long_form_ethnicities.items():
         for j in v:
             if j in image_summary_info_cln.lower():
                 if not ('caucasian' in e_matches and j == 'asian'):  # 'asian' is a substring in 'caucasian'.
@@ -527,7 +527,7 @@ def _illness_duration_guess_engine(image_summary_info):
             return None
 
     # Filter invalid extracts
-    durations = list([_f for _f in map(time_adj, hist_matches) if _f])
+    durations = list(filter(None, map(time_adj, hist_matches)))
 
     return durations[0] if len(durations) == 1 else None
 
@@ -572,7 +572,7 @@ def _im_scan(source):
     """
     # 1. Look for modality matches
     matches = defaultdict(set)
-    for k, v in list(terms_dict.items()):
+    for k, v in terms_dict.items():
         if any(i in source for i in v[0]):
             # Add that the `k` modality was found (e.g., 'mri').
             matches[k].add(None)
@@ -584,15 +584,15 @@ def _im_scan(source):
                         matches[k].add(cln(v2[0]))
 
     # 2. Look for subtype matches which can be used to infer the modality itself.
-    for k, v in list(modality_specific_subtypes.items()):
+    for k, v in modality_specific_subtypes.items():
         for i in v:
             if any(j in source for j in i):
                 matches[k].add(cln(i[0]))
 
-    if len(list(matches.keys())) != 1:
+    if len(matches.keys()) != 1:
         return None
     else:
-        return {k: list([_f for _f in v if _f]) for k, v in list(matches.items())}
+        return {k: list(filter(None, v)) for k, v in matches.items()}
 
 
 def _im_drop_contradictions(values):
@@ -645,7 +645,7 @@ def _imaging_modality_guess(abstract, image_caption, image_mention):
     for source in (image_caption, image_mention, abstract):
         if isinstance(source, str):
             scan_rslt = _im_scan(source=cln(source).lower())
-            if isinstance(scan_rslt, dict) and len(list(scan_rslt.keys())) == 1:
+            if isinstance(scan_rslt, dict) and len(scan_rslt.keys()) == 1:
                 return _im_formatter(scan_rslt)
     else:
         return None  # capitulate
@@ -765,7 +765,7 @@ def _enumerations_test(l):
     elif all(i.isalpha() for i in l):
         return False
     # Check for numeric enumeration, e.g., ['1', '2', '3', '4'].
-    elif order_set(l) == list(map(str, list(range(1, len(l) + 1)))):
+    elif order_set(l) == list(map(str, range(1, len(l) + 1))):
         return True
     # Block simple enumerations that do not start at 1, e.g., ['2', '3', '4'].
     elif all(i.isdigit() for i in l):
@@ -828,7 +828,7 @@ def _markers_guess(image_caption):
 
     for term in ('arrow', 'asterisk'):
         # Look for arrows or asterisk.
-        match_on = tuple([x.format(term) for x in (' {0} ', ' {0}', ' {0}s ', ' {0}s')])
+        match_on = tuple(map(lambda x: x.format(term), (' {0} ', ' {0}', ' {0}s ', ' {0}s')))
         # Example: '...which are indicated by the asterisks...'
         if any(i in image_caption_clean for i in match_on):
             features.add("{0}s".format(term))

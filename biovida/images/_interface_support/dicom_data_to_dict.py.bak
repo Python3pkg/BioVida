@@ -50,7 +50,7 @@ def parse_string_to_tuple(value):
     for (left, right) in braces:
         if left in value and right in value:
             value_split = value.replace(left, "").replace(right, "").split(",")
-            value_split_cln = list([_f for _f in map(cln, value_split) if _f])
+            value_split_cln = list(filter(None, map(cln, value_split)))
             if len(value_split_cln) == 0:
                 return None
             try:

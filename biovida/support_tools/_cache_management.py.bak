@@ -39,8 +39,8 @@ def _medpix_logo_download(save_path,
         image_cropped = image.crop((406, 6, 502, 27))
         image_cropped.save(full_save_path)
         if verbose:
-            print(("\nThe MedPix Logo, required for processing images from Open-i, "
-                  "has been downloaded to:\n\n{0}\n".format(list_to_bulletpoints([full_save_path]))))
+            print("\nThe MedPix Logo, required for processing images from Open-i, "
+                  "has been downloaded to:\n\n{0}\n".format(list_to_bulletpoints([full_save_path])))
 
     return {'medpix_logo': full_save_path}
 
@@ -76,8 +76,8 @@ def _created_notice(created_list, system_path):
     :return:
     """
     if len(created_list):
-        print(("The following directories were created:\n%s\nin: '%s'." % \
-              ("".join(["  - " + i + "\n" for i in created_list]), system_path + os.sep)))
+        print("The following directories were created:\n%s\nin: '%s'." % \
+              ("".join(["  - " + i + "\n" for i in created_list]), system_path + os.sep))
         print("\n")
 
 
@@ -130,7 +130,7 @@ def _directory_creator(cache_path=None, verbose=True):
     sub_dirs_made = _sub_directory_creator(root_path, ['images_cache', 'genomics_cache', 'diagnostics_cache'])
 
     # Record Created Dirs
-    created_dirs += list({k: v for k, v in list(sub_dirs_made.items()) if k[1] is True}.values())
+    created_dirs += {k: v for k, v in sub_dirs_made.items() if k[1] is True}.values()
 
     # Print results, if verbose is True
     if verbose and len(created_dirs):
@@ -159,7 +159,7 @@ def _add_to_create_nest(nest, record_dict, verbose):
             record_dict[new_nested_dir] = new_dir_name
 
     if verbose and len(created):
-        print(("The following nested directories were also created:\n{0}\n".format(list_to_bulletpoints(created))))
+        print("The following nested directories were also created:\n{0}\n".format(list_to_bulletpoints(created)))
 
     return record_dict
 
@@ -208,14 +208,14 @@ def package_cache_creator(sub_dir, to_create, cache_path=None, nest=None, verbos
     package_created_dirs = _sub_directory_creator(sub_dir_full_path, to_create)
 
     # New dirs created
-    new = {k: v for k, v in list(package_created_dirs.items()) if k[1] is True}
+    new = {k: v for k, v in package_created_dirs.items() if k[1] is True}
 
     # Print record of files created, if verbose is True
-    if verbose and len(list(new.values())):
-        _created_notice(list(new.values()), root_path)
+    if verbose and len(new.values()):
+        _created_notice(new.values(), root_path)
 
     # Render a hash map of `cache_path` - to - local address
-    record_dict = {k[0]: os.path.join(sub_dir_full_path, v.split(os.sep)[-1]) for k, v in list(package_created_dirs.items())}
+    record_dict = {k[0]: os.path.join(sub_dir_full_path, v.split(os.sep)[-1]) for k, v in package_created_dirs.items()}
     record_dict['ROOT_PATH'] = root_path
 
     # Add nested directories, if any
@@ -223,7 +223,7 @@ def package_cache_creator(sub_dir, to_create, cache_path=None, nest=None, verbos
     
     # Download the medpix logo to `sub_dir`, if `sub_dir` is 'images'.
     if sub_dir == 'images' and requires_medpix_logo:
-        if 'aux' not in list(record_dict_nest.keys()):
+        if 'aux' not in record_dict_nest.keys():
             raise ValueError("`nest` (or `to_create`) must contain 'aux' if `requires_medpix_logo` is `True`.")
         medpix_logo_location = _medpix_logo_download(record_dict_nest['aux'], verbose=verbose)
         # Add the path to the logo to `record_dict_nest`

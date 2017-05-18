@@ -223,7 +223,7 @@ def _corners_calc(top_left, bottom_right):
          'top_right': (bottom_right[0], top_left[1]),
          'bottom_left': (top_left[0], bottom_right[1]),
          'bottom_right': bottom_right}
-    return {k: tuple(map(int, v)) for k, v in list(d.items())}
+    return {k: tuple(map(int, v)) for k, v in d.items()}
 
 
 def robust_match_template(pattern_image,

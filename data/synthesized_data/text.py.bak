@@ -39,7 +39,7 @@ def get_fonts():
             return any(s.endswith(a) for a in allowed_formats)
         return [os.path.join(font_path, font) for font in os.listdir(font_path) if allowed_tails(font)]
 
-    font_complete_list = list(chain(*list(map(font_extract, font_locations))))
+    font_complete_list = list(chain(*map(font_extract, font_locations)))
     allowed_font_famlies = ('arial', 'courier', 'times', 'sans ')
     banned_fonts = ['unicode', 'arialhb']
 
@@ -95,11 +95,11 @@ def letters_freqs():
     :return:
     """
     letter_freq = pd.read_csv(StringIO(letter_data), sep=",")[['Letter', 'Count']]
-    letter_freq_dict = dict(list(zip(letter_freq['Letter'], letter_freq['Count'])))
-    letter_freq_dict = {k.lower(): float(v / sum(letter_freq_dict.values())) for k, v in list(letter_freq_dict.items())}
+    letter_freq_dict = dict(zip(letter_freq['Letter'], letter_freq['Count']))
+    letter_freq_dict = {k.lower(): float(v / sum(letter_freq_dict.values())) for k, v in letter_freq_dict.items()}
 
     letters, freqs = list(), list()
-    for k, v in list(letter_freq_dict.items()):
+    for k, v in letter_freq_dict.items():
         letters.append(k)
         freqs.append(v)
 
@@ -204,7 +204,7 @@ def random_text_gen(n_chars=(1, 4), n_words=(1, 2), n_phrases=(1, 2)):
         return [case_change(w) for w in words]
 
     def random_numbers():
-        numbers = list(np.random.choice(list(map(str, list(range(1, 11)))), random_int(n_chars)))
+        numbers = list(np.random.choice(list(map(str, range(1, 11))), random_int(n_chars)))
 
         def random_astrix(n):
             options = [("*", n, ""), ("", n, "*"), ("", n, "")]
@@ -217,7 +217,7 @@ def random_text_gen(n_chars=(1, 4), n_words=(1, 2), n_phrases=(1, 2)):
 
     # Decide whether or not to only numbers from 1 - 5
     if randint(0, 100) >= 80:
-        return list(map(str, list(range(1, randint(2, 9)))))
+        return list(map(str, range(1, randint(2, 9))))
 
     if randint(0, 100) >= 80:
         random_letter_enumeration = ascii_lowercase[:randint(2, len(ascii_lowercase))]
@@ -246,7 +246,7 @@ def random_text_gen(n_chars=(1, 4), n_words=(1, 2), n_phrases=(1, 2)):
         phrases += random_numbers()
 
     # Return words composed of single letters as separate elements
-    return list(chain(*[i.split() if max(list(map(len, i.split()))) == 1 else [i] for i in phrases]))
+    return list(chain(*[i.split() if max(map(len, i.split())) == 1 else [i] for i in phrases]))
 
 
 def occluding_text_masher(background_options, border_buffer=0.35):
@@ -320,7 +320,7 @@ def occluding_text_creator(all_image_options, start, end, general_name, save_loc
     """
 
     """
-    for i in tqdm(list(range(start+1, end+1))):
+    for i in tqdm(range(start+1, end+1)):
         # Define the save location
         image_name = "{0}_{1}.png".format(i, general_name)
         save_path = os.path.join(save_location, image_name)

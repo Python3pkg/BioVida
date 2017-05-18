@@ -28,7 +28,7 @@ def _rounder(l, by=3):
     :rtype: ``list``
     """
     t = int if by == 0 else float
-    return list([round(t(x), by) for x in l])
+    return list(map(lambda x: round(t(x), by), l))
 
 
 def _deltas(iterable):
@@ -562,7 +562,7 @@ def border_detection(image,
         return d
     else:
         return {k: tuple([i[0] for i in v]) if isinstance(v, list) else (v[0] if isinstance(v, (list, tuple)) else v)
-                for k, v in list(d.items())}
+                for k, v in d.items()}
 
 
 def _lines_plotter(path_to_image):
@@ -577,7 +577,7 @@ def _lines_plotter(path_to_image):
     from matplotlib import collections as mc
 
     image = load_image_rescale(path_to_image)
-    analysis = {k: v for k, v in list(border_detection(image=image).items()) if v is not None}
+    analysis = {k: v for k, v in border_detection(image=image).items() if v is not None}
 
     h, w = image.shape
     h_lines_explicit = [[(0, i), (w, i)] for i in analysis.get('hborder', [])]

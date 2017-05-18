@@ -492,7 +492,7 @@ class ImageClassificationCNN(object):
         if self._data_path is not None:
             self._data_stream()
 
-        classes = len(list(self.data_classes.keys()))
+        classes = len(self.data_classes.keys())
 
         try:
             model_method = getattr(self, model_to_use)
@@ -663,7 +663,7 @@ class ImageClassificationCNN(object):
         :return: a list of tuples where the elements are of the form ``(label, P(label))``
         :rtype: ``list``
         """
-        data_classes_reversed = {v: k for k, v in list(self.data_classes.items())}
+        data_classes_reversed = {v: k for k, v in self.data_classes.items()}
         predictions = ((data_classes_reversed[e], i) for e, i in enumerate(single_image_prediction))
         return sorted(predictions, key=lambda x: x[1], reverse=True)
 

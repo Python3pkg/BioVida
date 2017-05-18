@@ -62,7 +62,7 @@ def base_image_record(images_used, cache_path, save_path):
     
     # Extract the URL data from the image record database
     df['image_names'] = df['image_cache_path'].map(lambda x: x.split("/")[-1])
-    name_url_dict = dict(list(zip(df['image_names'], df['image_large'])))
+    name_url_dict = dict(zip(df['image_names'], df['image_large']))
     
     # Map the URL data onto the image names
     images_used['URL'] = images_used['ImageName'].map(lambda x: name_url_dict[x.replace(" (1)", "")])

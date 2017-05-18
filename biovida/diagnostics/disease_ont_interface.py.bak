@@ -57,7 +57,7 @@ class DiseaseOntInterface(object):
         :return: ``[text in quotes, text outside of quotes]``
         :rtype: ``list``
         """
-        return list(map(cln, [_f for _f in q.split("\"") if _f]))
+        return list(map(cln, filter(None, q.split("\""))))
     
     def _def_url_parser(self, definition):
         """
@@ -146,9 +146,9 @@ class DiseaseOntInterface(object):
             # Split the flag and its corresponding list
             additional_v = re.split(r'\s(?=\[)', parsed_v[1])
             # Clean the flag list
-            cleaned_flag = list(map(cln, additional_v[1].replace("[", "").replace("]", "").split(", ")))
+            cleaned_flag = map(cln, additional_v[1].replace("[", "").replace("]", "").split(", "))
             # Filter the flag list
-            related_info = list([_f for _f in cleaned_flag if _f])
+            related_info = list(filter(None, cleaned_flag))
             # Return the (key, quote) and the (key_flag, info).
             return [(k, parsed_v[0]), ("{0}_{1}".format(k, additional_v[0].lower()), related_info)]
         else:
@@ -210,7 +210,7 @@ class DiseaseOntInterface(object):
         :rtype: ``dict``
         """
         # Split the term on line breaks
-        split_term = [_f for _f in cln(term).split("\n") if _f]
+        split_term = filter(None, cln(term).split("\n"))
     
         # Split each element in `term` on the ": " pattern.
         parsed_term = [i.split(": ", 1) for i in split_term]
@@ -296,7 +296,7 @@ class DiseaseOntInterface(object):
         list_of_dicts = [i[0] for i in fully_parsed_terms]
     
         # Extract keys (future column names) which contain lists
-        keys_with_lists = [_f for _f in (i[1] for i in fully_parsed_terms) if _f]
+        keys_with_lists = filter(None, (i[1] for i in fully_parsed_terms))
     
         # Compress `keys_with_lists` to uniques.
         columns_with_lists = set(chain(*keys_with_lists))

@@ -197,4 +197,4 @@ def openi_search_information():
     ordered_params = ['query', '&it', '&favor', '&at', '&vid', '&sub', '&coll', '&fields', '&sp']
 
     # Return the openi_api_search_params dict with the dicts nested therein reversed.
-    return {k: (v[0], dict_reverse(v[1])) for k, v in list(openi_api_search_params.items())}, ordered_params
+    return {k: (v[0], dict_reverse(v[1])) for k, v in openi_api_search_params.items()}, ordered_params

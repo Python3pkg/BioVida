@@ -127,15 +127,15 @@ def dict_pprint(d, sort_keys=True, space_entries=True, max_value_length=70):
 
     def prep_dict(dictionary):
         if sort_keys:
-            return sorted(list(dictionary.items()), key=lambda x: x[0])
+            return sorted(dictionary.items(), key=lambda x: x[0])
         else:
-            return list(dictionary.items())
+            return dictionary.items()
 
     # Compute the length of the longest key
     len_longest_key = len(max(list(d.keys()), key=len))
 
     new_dict = dict()
-    for k, v in list(d.items()):
+    for k, v in d.items():
         key = _key_padding(k, len_longest_key=len_longest_key)
         value = _value_correction(v, len_longest_key=len_longest_key,
                                   max_value_length=max_value_length,
@@ -143,7 +143,7 @@ def dict_pprint(d, sort_keys=True, space_entries=True, max_value_length=70):
         new_dict[key] = value
 
     for k, v in prep_dict(new_dict):
-        print((print_mold.format(k), v))
+        print(print_mold.format(k), v)
         if space_entries:
             print("\n")
 
@@ -234,7 +234,7 @@ def _align_pandas(data_frame, to_align='right'):
     else:
         raise ValueError("to_align must be either 'left', 'right', 'center', or a dict.")
 
-    for col, justification in list(alignment_dict.items()):
+    for col, justification in alignment_dict.items():
         data_frame[col] = _pandas_series_alignment(data_frame[col], justification)
 
     return data_frame

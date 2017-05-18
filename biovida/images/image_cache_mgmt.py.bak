@@ -30,7 +30,6 @@ from biovida.support_tools.utilities import (_tvt_dict_gen,
 
 # Import Printing Tools
 from biovida.support_tools import pandas_pprint
-import collections
 
 
 # ----------------------------------------------------------------------------------------------------------
@@ -57,7 +56,7 @@ def _openi_image_relation_map(data_frame):
 
     # Get duplicated img_large occurrences. Use of 'img_large' is arbitrary, could have used
     # any of the 'img_...' columns, e.g., 'img_thumb' or 'img_grid150'.
-    duplicated_image_refs = (k for k, v in list(Counter(df['img_large']).items()) if v > 1)
+    duplicated_image_refs = (k for k, v in Counter(df['img_large']).items() if v > 1)
 
     # Get the indices of duplicates
     dup_index = {k: df[df['img_large'] == k].index.tolist() for k in duplicated_image_refs}
@@ -94,9 +93,9 @@ def _dict_to_tot(d):
         return d
 
     def values_to_tuples(d):
-        return {k: tuple(sorted(v)) if isinstance(v, (list, tuple)) else v for k, v in list(d.items())}
+        return {k: tuple(sorted(v)) if isinstance(v, (list, tuple)) else v for k, v in d.items()}
 
-    return tuple(sorted(list(values_to_tuples(d).items()), key=lambda x: x[0]))
+    return tuple(sorted(values_to_tuples(d).items(), key=lambda x: x[0]))
 
 
 def _record_update_dbs_joiner(records_db, update_db):
@@ -188,9 +187,9 @@ def _records_db_merge(interface_name,
     combined_dbs = pd.concat([current_records_db, records_db_update], ignore_index=True)
 
     # Mark each row to conserve order following ``pandas.drop_duplicates()``.
-    combined_dbs['__temp_order__'] = list(range(combined_dbs.shape[0]))
+    combined_dbs['__temp_order__'] = range(combined_dbs.shape[0])
 
-    if isinstance(rows_to_conserve_func, collections.Callable):
+    if callable(rows_to_conserve_func):
         combined_dbs = combined_dbs[combined_dbs.apply(rows_to_conserve_func, axis=1)]
 
     # Convert items in ``columns_with_dicts`` from dictionaries to tuple of tuples.
@@ -205,7 +204,7 @@ def _records_db_merge(interface_name,
     combined_dbs = combined_dbs.sort_values('__temp_order__')
     combined_dbs = _relationship_mapper(data_frame=combined_dbs, interface_name=interface_name)
 
-    if isinstance(pre_return_func, collections.Callable):
+    if callable(pre_return_func):
         combined_dbs = pre_return_func(combined_dbs)
 
     return combined_dbs.drop('__temp_order__', axis=1).reset_index(drop=True)
@@ -351,8 +350,8 @@ def _double_check_with_user():
     Ask the user to verify they wish to proceed.
 
     """
-    response = eval(input("This action cannot be undone.\n"
-                     "Do you wish to continue (y/n)?"))
+    response = input("This action cannot be undone.\n"
+                     "Do you wish to continue (y/n)?")
     if cln(response).lower() not in ('yes', 'ye', 'es', 'y'):
         raise ValueError("Action Canceled. 'y' must be entered to proceed.")
 
@@ -437,7 +436,7 @@ def _delete_rule_wrapper_gen(instance, delete_rule, only_recent, image_columns):
     def delete_rule_wrapper(row, enact):
         """Wrap delete_rule to ensure the output,
          whether or not to delete, is a boolean."""
-        if isinstance(delete_rule, collections.Callable):
+        if callable(delete_rule):
             if only_recent:
                 func_delete = delete_rule(row) and row['pull_time'] == last_pull_time
             else:
@@ -570,7 +569,7 @@ def image_delete(instance, delete_rule, only_recent=False, verbose=True):
         else:
             raise TypeError("`cache_record_db` is not a DataFrame.")
 
-    deleted_rows = {k: sorted(set(v['before']) - set(v['after'])) for k, v in list(index_dict.items())}
+    deleted_rows = {k: sorted(set(v['before']) - set(v['after'])) for k, v in index_dict.items()}
     _pretty_print_image_delete(deleted_rows=deleted_rows, verbose=verbose)
 
     return deleted_rows
@@ -593,7 +592,7 @@ def _image_divvy_error_checking(divvy_rule, action, train_val_test_dict):
     :param train_val_test_dict: see ``image_divvy()``.
     :type train_val_test_dict: ``dict``
     """
-    if not isinstance(divvy_rule, str) and not isinstance(divvy_rule, collections.Callable):
+    if not isinstance(divvy_rule, str) and not callable(divvy_rule):
         raise TypeError("`divvy_rule` must be a string or function.")
 
     if isinstance(train_val_test_dict, dict):
@@ -709,7 +708,7 @@ def _image_divvy_wrappers_gen(divvy_rule, action, train_val_test_dict, column_to
                             "'{0}'.".format(type(copy_to).__name__))
 
     def divvy_rule_wrapper(row):
-        group = divvy_rule(row) if isinstance(divvy_rule, collections.Callable) else divvy_rule
+        group = divvy_rule(row) if callable(divvy_rule) else divvy_rule
         if not isinstance(group, (str, list, tuple)):
             return None
         if isinstance(group, (list, tuple)) and not len(group):

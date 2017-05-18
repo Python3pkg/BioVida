@@ -102,7 +102,7 @@ def ellipse_image_creator(all_image_options, start, end, general_name, save_loca
     :param save_location:
     :return:
     """
-    for i in tqdm(list(range(start+1, end+1))):
+    for i in tqdm(range(start+1, end+1)):
         # Open a random photo and crop
         base_image = random_crop(Image.open(random.choice(all_image_options)))
         # Save

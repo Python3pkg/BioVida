@@ -66,7 +66,7 @@ def dict_reverse(d):
     :param d:
     :return:
     """
-    return {v: k for k, v in list(d.items())}
+    return {v: k for k, v in d.items()}
 
 
 def reverse_comma(s):
@@ -208,7 +208,7 @@ def directory_existence_handler(path_, allow_creation=True, verbose=False):
         if allow_creation:
             os.makedirs(path_)
             if verbose:
-                print(("\nThe following directory has been created:\n\n{0}\n".format(path_)))
+                print("\nThe following directory has been created:\n\n{0}\n".format(path_))
         else:
             raise NotADirectoryError("No such directory:\n'{0}'\n".format(path_))
     return path_
@@ -258,7 +258,7 @@ def list_to_bulletpoints(l, sort_elements=True):
     :rtype: ``str``
     """
     to_format = sorted(l) if sort_elements else list(l)
-    return "".join(["  - '{0}'\n".format(x) for x in to_format])[:-1]
+    return "".join(map(lambda x: "  - '{0}'\n".format(x), to_format))[:-1]
 
 
 def header(string, flank=True):
@@ -278,7 +278,7 @@ def header(string, flank=True):
     # Display
     if flank:
         print("\n")
-    print(("\n{0}\n{1}\n{2}\n".format(sep_line, string, sep_line)))
+    print("\n{0}\n{1}\n{2}\n".format(sep_line, string, sep_line))
     if flank:
         print("\n")
 

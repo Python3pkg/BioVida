@@ -65,7 +65,7 @@ class DiseaseSymptomsInterface(object):
         :return: columns in snake_case
         :rtype: ``list``
         """
-        return list([cln(x).replace(" ", "_").lower() for x in list(columns)])
+        return list(map(lambda x: cln(x).replace(" ", "_").lower(), list(columns)))
 
     @staticmethod
     def _comma_reverse(term):

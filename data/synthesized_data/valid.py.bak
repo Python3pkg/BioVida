@@ -21,7 +21,7 @@ def valid_image_creator(image_options, start, end, general_name, save_location, 
     scale_range = (0.8, 1.2)
     required_min_size = min_size * (2 - scale_range[0])  # simple algebra
 
-    for i in tqdm(list(range(start+1, end+1))):
+    for i in tqdm(range(start+1, end+1)):
         # Open and randomly crop
         image = random_crop_min(background_options=image_options, min_size=required_min_size, limit=500)
         # Randomly rescale

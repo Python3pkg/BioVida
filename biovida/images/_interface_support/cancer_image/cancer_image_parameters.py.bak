@@ -114,7 +114,7 @@ class CancerImageArchiveParams(object):
         elif "(R)" in q_params.strip():
             parsed_q_params = self._extract_on_required(q_params)
         else:
-            parsed_q_params = list([i.strip() for i in cln(q_params).split("/")])
+            parsed_q_params = list(map(lambda i: i.strip(), cln(q_params).split("/")))
     
         # Mark params as required
         return [(p.replace("(R)", "").strip(), 'r') if "(R)" in p else (p, 'o') for p in parsed_q_params]
@@ -144,8 +144,8 @@ class CancerImageArchiveParams(object):
         api_df = valid_tables[0]
     
         # Clean Column Names
-        c_names = list([camel_to_snake_case(cln(i, extent=2)) for i in api_df.columns])
-        api_df.columns = list([n_split(i, n=2)[0].strip() for i in c_names])
+        c_names = list(map(lambda i: camel_to_snake_case(cln(i, extent=2)), api_df.columns))
+        api_df.columns = list(map(lambda i: n_split(i, n=2)[0].strip(), c_names))
     
         return api_df
     
@@ -257,7 +257,7 @@ class CancerImageArchiveParams(object):
         else:
             modality_df = pd.read_pickle(save_path)
 
-        return modality_df if rtype == 'dataframe' else dict(list(zip(modality_df['short'], modality_df['long'])))
+        return modality_df if rtype == 'dataframe' else dict(zip(modality_df['short'], modality_df['long']))
 
     def cancer_image_api_ref(self,
                              rtype='dataframe',

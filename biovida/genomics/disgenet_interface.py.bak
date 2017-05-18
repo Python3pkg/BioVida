@@ -121,7 +121,7 @@ class DisgenetInterface(object):
         """
         if database not in _disgenet_delimited_databases:
             raise ValueError("'{0}' is an invalid value for `database`.\n`database` must be one of:\n{1}".format(
-                str(database), list_to_bulletpoints(list(_disgenet_delimited_databases.keys()))))
+                str(database), list_to_bulletpoints(_disgenet_delimited_databases.keys())))
 
     def options(self, database=None, pretty_print=True):
         """
@@ -142,7 +142,7 @@ class DisgenetInterface(object):
         if database is None:
             info = list(_disgenet_delimited_databases.keys())
         elif database in _disgenet_delimited_databases:
-            info = {k: v for k, v in list(_disgenet_delimited_databases[database].items())
+            info = {k: v for k, v in _disgenet_delimited_databases[database].items()
                     if k in ['full_name', 'description']}
         else:
             self._disgenet_delimited_databases_key_error(database)
@@ -150,7 +150,7 @@ class DisgenetInterface(object):
         if pretty_print:
             if database is None:
                 print("Available Databases:\n")
-                print((list_to_bulletpoints(info)))
+                print(list_to_bulletpoints(info))
             else:
                 dict_pprint(info)
         else:

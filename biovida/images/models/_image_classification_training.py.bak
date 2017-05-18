@@ -31,15 +31,15 @@ models = ['default', 'squeezenet']
 def select_model():
     print("The following models can be used:\n")
     for e, m in enumerate(models, start=1):
-        print(("{0}.".format(str(e)), "'{0}'".format(m.replace("_", " "))))
+        print("{0}.".format(str(e)), "'{0}'".format(m.replace("_", " ")))
 
     model_to_use_no = -1
     while model_to_use_no < 1 or model_to_use_no > len(models):
-        model_to_use_no = int(eval(input("Please enter the number of "
-                                    "the model you wish to use: ")))
+        model_to_use_no = int(input("Please enter the number of "
+                                    "the model you wish to use: "))
 
     model_to_use = models[model_to_use_no - 1]
-    print(("Selected Model:", model_to_use))
+    print("Selected Model:", model_to_use)
     return model_to_use
 
 
@@ -60,8 +60,8 @@ def _image_recognition_cnn_training(epochs, model_to_use, save_name):
     ircnn.save(save_name, path=SAVE_PATH)
 
 
-save_name = eval(input("Please enter 'save name' for the output file: "))
-epochs = int(eval(input("Please enter the number of epochs: ")))
+save_name = input("Please enter 'save name' for the output file: ")
+epochs = int(input("Please enter the number of epochs: "))
 model_to_use = select_model()
 
 _image_recognition_cnn_training(epochs, model_to_use, save_name)

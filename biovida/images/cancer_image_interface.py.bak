@@ -117,7 +117,7 @@ class _CancerImageArchiveOverview(object):
             lambda x: cln(x.replace(" and ", ", ").replace("Head-Neck", "Head, Neck")).split(", "))
 
         summary_df['updated'] = pd.to_datetime(summary_df['updated'], infer_datetime_format=True)
-        summary_df.columns = list([cln(x, extent=2) for x in summary_df.columns])
+        summary_df.columns = list(map(lambda x: cln(x, extent=2), summary_df.columns))
 
         return summary_df
 
@@ -166,7 +166,7 @@ class _CancerImageArchiveOverview(object):
         # Filter by `cancer_type`
         if isinstance(cancer_type, (str, list, tuple)):
             if isinstance(cancer_type, (list, tuple)):
-                cancer_type = "|".join([cln(x).lower() for x in cancer_type])
+                cancer_type = "|".join(map(lambda x: cln(x).lower(), cancer_type))
             else:
                 cancer_type = cln(cancer_type).lower()
             summary_df = summary_df[summary_df['cancer_type'].str.lower().str.contains(cancer_type)]
@@ -191,7 +191,7 @@ class _CancerImageArchiveOverview(object):
 
         # Filter by `modality`.
         if isinstance(modality, (str, list, tuple)):
-            modality = [modality.lower()] if isinstance(modality, str) else list([x.lower() for x in modality])
+            modality = [modality.lower()] if isinstance(modality, str) else list(map(lambda x: x.lower(), modality))
             summary_df = summary_df[summary_df.apply(lambda x: modality_filter(x, modality), axis=1)]
 
         return summary_df
@@ -575,7 +575,7 @@ class _CancerImageArchiveImages(object):
             return os.path.join(temporary_folder, base_name) if len(base_name) else None
 
         # Generate the list of paths to the dicoms
-        return list([_f for _f in map(file_path_full, z.filelist) if _f])
+        return list(filter(None, map(file_path_full, z.filelist)))
 
     @staticmethod
     def _extract_instance_number(f):
@@ -651,7 +651,7 @@ class _CancerImageArchiveImages(object):
             all_save_paths.append(path)
         # If ``f`` is a 3D image (e.g., segmentation dicom files), save each layer as a separate file/image.
         elif pixel_arr.ndim == 3:
-            for instance, layer in enumerate(list(range(pixel_arr.shape[0])), start=1):
+            for instance, layer in enumerate(range(pixel_arr.shape[0]), start=1):
                 path = save_path(instance)
                 Image.fromarray(pixel_arr[layer:layer + 1][0]).convert(conversion).save(path)
                 all_save_paths.append(path)
@@ -972,7 +972,7 @@ class _CancerImageArchiveImages(object):
             os.makedirs(self.temp_directory_path)
 
         settings_path = os.path.join(self.temp_directory_path, "image_pull_settings.p")
-        pickle.dump({k: v for k, v in list(locals().items()) if k not in ('self', 'settings_path')},
+        pickle.dump({k: v for k, v in locals().items() if k not in ('self', 'settings_path')},
                     open(settings_path, "wb"))
 
         if isinstance(session_limit, int):
@@ -1068,7 +1068,7 @@ class CancerImageInterface(object):
             if len(latent_pickles):
                 with open(latent_pickles[0], "rb") as f:
                     settings_dict = pickle.load(f)
-                settings_dict_for_pull = {k: v for k, v in list(settings_dict.items()) if k not in ['records_db']}
+                settings_dict_for_pull = {k: v for k, v in settings_dict.items() if k not in ['records_db']}
                 settings_dict_for_pull['new_records_pull'] = False  # adding this separately in `pull` breaks in python2
 
                 print("\nResuming Download...")
@@ -1251,7 +1251,7 @@ class CancerImageInterface(object):
             raise ValueError("Both `cancer_types` and `location` must be ``None`` if a `collection` name is passed.")
         elif isinstance(collection, (str, list, tuple)):
             coll = [collection] if isinstance(collection, str) else collection
-            summary_df = summary_df[summary_df['collection'].str.lower().isin([cln(x).lower() for x in coll])]
+            summary_df = summary_df[summary_df['collection'].str.lower().isin(map(lambda x: cln(x).lower(), coll))]
             if summary_df.shape[0] == 0:
                 raise AttributeError("No collection with the name '{0}' could be found.".format(collection))
             else:
@@ -1280,11 +1280,11 @@ class CancerImageInterface(object):
             if isinstance(v, str):
                 return v.lower()
             elif isinstance(v, (list, tuple)):
-                return tuple([x.lower() for x in v])
+                return tuple(map(lambda x: x.lower(), v))
             else:
                 return v
 
-        self.search_dict = {k: lower_sdict(v) for k, v in list(sdict.items())}
+        self.search_dict = {k: lower_sdict(v) for k, v in sdict.items()}
 
     def search(self,
                collection=None,

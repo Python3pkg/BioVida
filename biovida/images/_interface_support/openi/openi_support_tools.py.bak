@@ -198,7 +198,7 @@ def filter_unnest(l, filter_for=None):
     :return: ``l`` flattened with ``filter_for`` removed.
     :rtype: ``list``
     """
-    return list(chain(*list(filter(filter_for, l))))
+    return list(chain(*filter(filter_for, l)))
 
 
 def num_word_to_int(input_str):

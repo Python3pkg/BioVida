@@ -300,7 +300,7 @@ class _DiseaseOntologyIntegration(object):
                         elif name not in ont_disease_synonym_dict[s]:
                             ont_disease_synonym_dict[s] += [name]
 
-        return ont_name_dict, ont_name_dict_nest_keys, {k: sorted(v) for k, v in list(ont_disease_synonym_dict.items())}
+        return ont_name_dict, ont_name_dict_nest_keys, {k: sorted(v) for k, v in ont_disease_synonym_dict.items()}
 
     def __init__(self, cache_path=None, verbose=True):
         self.verbose = verbose
@@ -574,7 +574,7 @@ class _DiseaseSymptomsIntegration(object):
         d = defaultdict(set)
         for disease, symptom in zip(dis_symp_db['common_disease_name'], dis_symp_db['common_symptom_term']):
             d[disease.lower()].add(symptom.lower())
-        return {k: tuple(sorted(v)) for k, v in list(d.items())}
+        return {k: tuple(sorted(v)) for k, v in d.items()}
 
     def __init__(self, cache_path=None, verbose=True):
         self.verbose = verbose
@@ -667,10 +667,10 @@ class _DisgenetIntegration(object):
         :rtype: ``dict``
         """
         d = defaultdict(list)
-        cols = list(zip(*[disgenet_df[c] for c in ('disease_name', 'gene_name', 'score')]))
+        cols = zip(*[disgenet_df[c] for c in ('disease_name', 'gene_name', 'score')])
         for disease_name, gene_name, score in cols:
             d[disease_name].append((gene_name, score))
-        return {k: tuple(sorted(v, key=lambda x: x[0])) for k, v in list(d.items())}
+        return {k: tuple(sorted(v, key=lambda x: x[0])) for k, v in d.items()}
 
     def __init__(self, cache_path=None, verbose=True):
         self.verbose = verbose

@@ -234,7 +234,7 @@ def _data_frame_fill_nan(data_frame):
     to_nan = ('[nN]ot [aA]vailable.?', '[Nn]one.?', '[Nn]/[Aa]', '[Nn][Aa]',
               '[Ii][Nn] [Pp][Rr][Oo][Gg][Rr][Ee][Ss][Ss].?')
     # Anchor (i.e., exact matches are required, e.g., "NA" --> NaN, but "here we see NA" will not be converted).
-    anchored_to_nan = ["^{0}$".format(x) for x in to_nan]
+    anchored_to_nan = map(lambda x: "^{0}$".format(x), to_nan)
     data_frame = data_frame.replace(dict.fromkeys(anchored_to_nan, np.NaN), regex=True)
 
     # Replace the 'replace this - ' placeholder with NaN
@@ -300,9 +300,9 @@ def _unique_image_caption_dict_gen(data_frame, verbose):
     large_data_frame = 25000  # after this number of rows, processing time is notable.
 
     def counter_wrapper(l):
-        l_cleaned = [x for x in l if isinstance(x, str) and len(cln(x))]
+        l_cleaned = filter(lambda x: isinstance(x, str) and len(cln(x)), l)
         count_dict = dict(Counter(l_cleaned))
-        return {k: v == 1 for k, v in list(count_dict.items())} if count_dict else None
+        return {k: v == 1 for k, v in count_dict.items()} if count_dict else None
 
     def counter_wrapper_apply(row):
         return counter_wrapper(row['image_caption'].tolist())
@@ -312,7 +312,7 @@ def _unique_image_caption_dict_gen(data_frame, verbose):
 
     d = data_frame.groupby('uid').apply(counter_wrapper_apply).to_dict()
 
-    return {k: v for k, v in list(d.items()) if v is not None}
+    return {k: v for k, v in d.items() if v is not None}
 
 
 # ----------------------------------------------------------------------------------------------------------
@@ -339,7 +339,7 @@ def openi_raw_extract_and_clean(data_frame, clinical_cases_only, verbose, cache_
     :return: see description.
     :rtype:  ``Pandas DataFrame``
     """
-    data_frame.columns = list([camel_to_snake_case(x).replace("me_sh", "mesh") for x in data_frame.columns])
+    data_frame.columns = list(map(lambda x: camel_to_snake_case(x).replace("me_sh", "mesh"), data_frame.columns))
     data_frame = _df_add_missing_columns(data_frame)
 
     data_frame['article_type'] = data_frame['article_type'].map(article_type_lookup, na_action='ignore')

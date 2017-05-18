@@ -36,7 +36,6 @@ from biovida.images._interface_support.openi.openi_support_tools import (nonesse
 from biovida.images.models.border_detection import border_detection
 from biovida.images.models.template_matching import robust_match_template
 from biovida.images.models.image_classification import ImageClassificationCNN
-import collections
 
 # Suppress Pandas' SettingWithCopyWarning
 pd.options.mode.chained_assignment = None
@@ -93,7 +92,7 @@ class OpeniImageProcessing(object):
             file_path = os_join(resources_path, resource)
             if not os.path.isfile(file_path) or download_override:
                 if self._verbose:
-                    print(("Downloading '{0}'... ".format(resource)))
+                    print("Downloading '{0}'... ".format(resource))
                 download(url=urljoin(base_url, resource), file_path=file_path)
 
         self._model_path = os_join(resources_path, "visual_image_problems_model.h5")
@@ -791,7 +790,7 @@ class OpeniImageProcessing(object):
         """
         if action not in ('copy', 'ndarray'):
             raise ValueError("`action` must be either 'copy' or 'ndarray'.")
-        if not isinstance(output_rule, str) and not isinstance(output_rule, collections.Callable):
+        if not isinstance(output_rule, str) and not callable(output_rule):
             raise TypeError("`output_rule` must be a string or function.")
         if 'invalid_image' not in self.image_dataframe.columns:
             raise KeyError("`image_dataframe` must contain a 'invalid_image' column which uses booleans to\n"
@@ -909,7 +908,7 @@ class OpeniImageProcessing(object):
         def save_rule_wrapper(row):
             if isinstance(output_rule, str):
                 group = output_rule
-            elif isinstance(output_rule, collections.Callable):
+            elif callable(output_rule):
                 group = output_rule(row)
                 if group is None:
                     return None
@@ -949,6 +948,6 @@ class OpeniImageProcessing(object):
 
         if action == 'ndarray':
             return {k: np.array(v) if not ndarray_with_path else v
-                    for k, v in list(return_dict.items())}
+                    for k, v in return_dict.items()}
         elif action == 'copy':
             return dict(return_dict)
