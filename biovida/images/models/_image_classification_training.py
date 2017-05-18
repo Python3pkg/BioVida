@@ -31,7 +31,7 @@ models = ['default', 'squeezenet']
 def select_model():
     print("The following models can be used:\n")
     for e, m in enumerate(models, start=1):
-        print(("{0}.".format(str(e)), "'{0}'".format(m.replace("_", " "))))
+        print("{0}.".format(str(e)), "'{0}'".format(m.replace("_", " ")))
 
     model_to_use_no = -1
     while model_to_use_no < 1 or model_to_use_no > len(models):
@@ -39,7 +39,7 @@ def select_model():
                                     "the model you wish to use: ")))
 
     model_to_use = models[model_to_use_no - 1]
-    print(("Selected Model:", model_to_use))
+    print("Selected Model:", model_to_use)
     return model_to_use
 
 

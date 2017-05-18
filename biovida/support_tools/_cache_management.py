@@ -36,11 +36,11 @@ def _medpix_logo_download(save_path,
         # Get representative images
         image = Image.open(requests.get(image_web_address, stream=True).raw)
         # Crop and Save
-        image_cropped = image.crop((406, 6, 502, 27))
+        image_cropped = image.crop(406, 6, 502, 27)
         image_cropped.save(full_save_path)
         if verbose:
-            print(("\nThe MedPix Logo, required for processing images from Open-i, "
-                  "has been downloaded to:\n\n{0}\n".format(list_to_bulletpoints([full_save_path]))))
+            print("\nThe MedPix Logo, required for processing images from Open-i, "
+                  "has been downloaded to:\n\n{0}\n".format(list_to_bulletpoints([full_save_path])))
 
     return {'medpix_logo': full_save_path}
 
@@ -76,8 +76,8 @@ def _created_notice(created_list, system_path):
     :return:
     """
     if len(created_list):
-        print(("The following directories were created:\n%s\nin: '%s'." % \
-              ("".join(["  - " + i + "\n" for i in created_list]), system_path + os.sep)))
+        print("The following directories were created:\n%s\nin: '%s'." % \
+              ("".join(["  - " + i + "\n" for i in created_list]), system_path + os.sep))
         print("\n")
 
 
@@ -159,7 +159,7 @@ def _add_to_create_nest(nest, record_dict, verbose):
             record_dict[new_nested_dir] = new_dir_name
 
     if verbose and len(created):
-        print(("The following nested directories were also created:\n{0}\n".format(list_to_bulletpoints(created))))
+        print("The following nested directories were also created:\n{0}\n".format(list_to_bulletpoints(created)))
 
     return record_dict
 

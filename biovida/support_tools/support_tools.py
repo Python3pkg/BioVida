@@ -208,7 +208,7 @@ def directory_existence_handler(path_, allow_creation=True, verbose=False):
         if allow_creation:
             os.makedirs(path_)
             if verbose:
-                print(("\nThe following directory has been created:\n\n{0}\n".format(path_)))
+                print("\nThe following directory has been created:\n\n{0}\n".format(path_))
         else:
             raise NotADirectoryError("No such directory:\n'{0}'\n".format(path_))
     return path_
@@ -278,7 +278,7 @@ def header(string, flank=True):
     # Display
     if flank:
         print("\n")
-    print(("\n{0}\n{1}\n{2}\n".format(sep_line, string, sep_line)))
+    print("\n{0}\n{1}\n{2}\n".format(sep_line, string, sep_line))
     if flank:
         print("\n")
 

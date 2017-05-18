@@ -150,7 +150,7 @@ class DisgenetInterface(object):
         if pretty_print:
             if database is None:
                 print("Available Databases:\n")
-                print((list_to_bulletpoints(info)))
+                print(list_to_bulletpoints(info))
             else:
                 dict_pprint(info)
         else:

@@ -143,7 +143,7 @@ def dict_pprint(d, sort_keys=True, space_entries=True, max_value_length=70):
         new_dict[key] = value
 
     for k, v in prep_dict(new_dict):
-        print((print_mold.format(k), v))
+        print(print_mold.format(k), v)
         if space_entries:
             print("\n")
 
@@ -202,7 +202,7 @@ def _pandas_series_alignment(pandas_series, justify):
             pattern = "({0},)" if len(x) == 1 else "({0})"
             return pattern.format(", ".join(map(str, x)))
         elif 'pandas' in str(type(x)) and 'Timestamp' in str(type(x)):
-            if all((x.hour == 0, x.minute == 0, x.second == 0)):
+            if all(x.hour == 0, x.minute == 0, x.second == 0):
                 return x.strftime('%Y-%m-%d')
             else:
                 return str(x)

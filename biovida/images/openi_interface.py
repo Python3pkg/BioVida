@@ -197,7 +197,7 @@ class _OpeniSearch(object):
             raise NoResultsFound("\nPlease Try Refining Your Search.")
 
         if print_results:
-            print(("\nResults Found: %s." % ('{:,.0f}'.format(total))))
+            print("\nResults Found: %s." % ('{:,.0f}'.format(total)))
 
         return total, sample['list'][0]
 
@@ -236,7 +236,7 @@ class _OpeniSearch(object):
                 raise ValueError("Relevant options for '{0}'.".format(search_parameter))
 
         if print_options:
-            print((list_to_bulletpoints(opts)))
+            print(list_to_bulletpoints(opts))
         else:
             return opts
 
@@ -578,8 +578,8 @@ class _OpeniRecords(object):
         :rtype: ``list``
         """
         if self._verbose:
-            print(("\nNumber of Records to Download: {0} (chunk size: {1} records).".format(
-                '{:,.0f}'.format(download_no), str(self.req_limit))))
+            print("\nNumber of Records to Download: {0} (chunk size: {1} records).".format(
+                '{:,.0f}'.format(download_no), str(self.req_limit)))
 
         do_sleep = isinstance(records_sleep_time, (list, tuple)) and len(records_sleep_time) == 2
 
