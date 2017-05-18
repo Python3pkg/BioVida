@@ -93,7 +93,7 @@ class OpeniImageProcessing(object):
             file_path = os_join(resources_path, resource)
             if not os.path.isfile(file_path) or download_override:
                 if self._verbose:
-                    print(("Downloading '{0}'... ".format(resource)))
+                    print("Downloading '{0}'... ".format(resource))
                 download(url=urljoin(base_url, resource), file_path=file_path)
 
         self._model_path = os_join(resources_path, "visual_image_problems_model.h5")
@@ -518,15 +518,15 @@ class OpeniImageProcessing(object):
         # Horizontal Cropping
         if not items_null(lower_crop):
             w, h = converted_image.size
-            converted_image = converted_image.crop((0, 0, w, int(lower_crop)))
+            converted_image = converted_image.crop(0, 0, w, int(lower_crop))
         if not items_null(upper_crop):
             w, h = converted_image.size
-            converted_image = converted_image.crop((0, int(upper_crop), w, h))
+            converted_image = converted_image.crop(0, int(upper_crop), w, h)
 
         # Vertical Cropping
         if not items_null(vborder):
             w, h = converted_image.size
-            converted_image = converted_image.crop((int(vborder[0]), 0, int(vborder[1]), h))
+            converted_image = converted_image.crop(int(vborder[0]), 0, int(vborder[1]), h)
 
         if convert_to_rgb:
             image_to_save = converted_image.convert("RGB")
